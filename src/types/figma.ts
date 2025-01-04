@@ -1,3 +1,6 @@
+/**
+ * Represents a color in RGBA format.
+ */
 export interface Color {
   r: number;
   g: number;
@@ -5,11 +8,17 @@ export interface Color {
   a: number;
 }
 
+/**
+ * Represents a 2D vector with x and y coordinates.
+ */
 export interface Vector {
   x: number;
   y: number;
 }
 
+/**
+ * Represents a rectangle with position and dimensions.
+ */
 export interface Rectangle {
   x: number;
   y: number;
@@ -17,15 +26,24 @@ export interface Rectangle {
   height: number;
 }
 
+/**
+ * Represents a 2D transformation matrix.
+ */
 export interface Transform {
   matrix: [[number, number, number], [number, number, number]];
 }
 
+/**
+ * Represents layout constraints for auto-layout frames.
+ */
 export interface LayoutConstraint {
   vertical: 'TOP' | 'BOTTOM' | 'CENTER' | 'TOP_BOTTOM' | 'SCALE';
   horizontal: 'LEFT' | 'RIGHT' | 'CENTER' | 'LEFT_RIGHT' | 'SCALE';
 }
 
+/**
+ * Represents the blending mode for layers.
+ */
 export interface BlendMode {
   type:
     | 'PASS_THROUGH'
@@ -49,6 +67,9 @@ export interface BlendMode {
     | 'LUMINOSITY';
 }
 
+/**
+ * Represents a paint style that can be solid color, gradient, or image.
+ */
 export interface Paint {
   type:
     | 'SOLID'
@@ -67,6 +88,9 @@ export interface Paint {
   scaleMode?: 'FILL' | 'FIT' | 'TILE' | 'STRETCH';
 }
 
+/**
+ * Represents a visual effect like shadows or blurs.
+ */
 export interface Effect {
   type: 'INNER_SHADOW' | 'DROP_SHADOW' | 'LAYER_BLUR' | 'BACKGROUND_BLUR';
   visible?: boolean;
@@ -76,6 +100,9 @@ export interface Effect {
   spread?: number;
 }
 
+/**
+ * Base interface for all Figma nodes.
+ */
 export interface BaseNode {
   id: string;
   name: string;
@@ -85,11 +112,17 @@ export interface BaseNode {
   sharedPluginData?: { [namespace: string]: { [key: string]: any } };
 }
 
+/**
+ * Represents the root node of a Figma document.
+ */
 export interface DocumentNode extends BaseNode {
   type: 'DOCUMENT';
   children: SceneNode[];
 }
 
+/**
+ * Represents a canvas/artboard in a Figma document.
+ */
 export interface CanvasNode extends BaseNode {
   type: 'CANVAS';
   children: SceneNode[];
@@ -97,6 +130,9 @@ export interface CanvasNode extends BaseNode {
   exportSettings?: ExportSetting[];
 }
 
+/**
+ * Represents a frame in Figma, which can contain other nodes.
+ */
 export interface FrameNode extends BaseNode {
   type: 'FRAME';
   children: SceneNode[];
@@ -122,6 +158,9 @@ export interface FrameNode extends BaseNode {
   itemSpacing?: number;
 }
 
+/**
+ * Represents a group of nodes in Figma.
+ */
 export interface GroupNode extends BaseNode {
   type: 'GROUP';
   children: SceneNode[];
@@ -134,6 +173,9 @@ export interface GroupNode extends BaseNode {
   layoutGrow?: number;
 }
 
+/**
+ * Represents a vector node in Figma.
+ */
 export interface VectorNode extends BaseNode {
   type: 'VECTOR';
   locked?: boolean;
@@ -155,6 +197,9 @@ export interface VectorNode extends BaseNode {
   effects?: Effect[];
 }
 
+/**
+ * Represents a boolean operation (union, intersection, etc.) between shapes.
+ */
 export interface BooleanOperationNode extends BaseNode {
   type: 'BOOLEAN_OPERATION';
   children: SceneNode[];
@@ -168,6 +213,9 @@ export interface BooleanOperationNode extends BaseNode {
   booleanOperation: 'UNION' | 'INTERSECT' | 'SUBTRACT' | 'EXCLUDE';
 }
 
+/**
+ * Represents a star shape in Figma.
+ */
 export interface StarNode extends BaseNode {
   type: 'STAR';
   locked?: boolean;
@@ -186,6 +234,9 @@ export interface StarNode extends BaseNode {
   innerRadius: number;
 }
 
+/**
+ * Represents a line in Figma.
+ */
 export interface LineNode extends BaseNode {
   type: 'LINE';
   locked?: boolean;
@@ -202,6 +253,9 @@ export interface LineNode extends BaseNode {
   effects?: Effect[];
 }
 
+/**
+ * Represents a text node in Figma.
+ */
 export interface TextNode extends BaseNode {
   type: 'TEXT';
   locked?: boolean;
@@ -217,6 +271,9 @@ export interface TextNode extends BaseNode {
   styleOverrideTable?: { [index: number]: TypeStyle };
 }
 
+/**
+ * Represents a component definition in Figma.
+ */
 export interface ComponentNode extends BaseNode {
   type: 'COMPONENT';
   children: SceneNode[];
@@ -230,6 +287,9 @@ export interface ComponentNode extends BaseNode {
   componentId: string;
 }
 
+/**
+ * Represents an instance of a component in Figma.
+ */
 export interface InstanceNode extends BaseNode {
   type: 'INSTANCE';
   children: SceneNode[];
@@ -243,11 +303,17 @@ export interface InstanceNode extends BaseNode {
   componentId: string;
 }
 
+/**
+ * Represents a path used in vector nodes.
+ */
 export interface Path {
   path: string;
   windingRule: 'NONZERO' | 'EVENODD';
 }
 
+/**
+ * Represents text styling properties.
+ */
 export interface TypeStyle {
   fontFamily: string;
   fontPostScriptName?: string;
@@ -267,6 +333,9 @@ export interface TypeStyle {
   lineHeightUnit: 'PIXELS' | 'PERCENT';
 }
 
+/**
+ * Represents export settings for a node.
+ */
 export interface ExportSetting {
   suffix: string;
   format: 'JPG' | 'PNG' | 'SVG' | 'PDF';
@@ -276,6 +345,9 @@ export interface ExportSetting {
   };
 }
 
+/**
+ * Union type of all possible node types in a Figma scene.
+ */
 export type SceneNode =
   | FrameNode
   | GroupNode
@@ -287,6 +359,9 @@ export type SceneNode =
   | ComponentNode
   | InstanceNode;
 
+/**
+ * Represents a Figma file metadata.
+ */
 export interface FigmaFile {
   key: string;
   name: string;
@@ -295,6 +370,9 @@ export interface FigmaFile {
   version: string;
 }
 
+/**
+ * Represents a version of a Figma file.
+ */
 export interface FigmaFileVersion {
   id: string;
   created_at: string;
@@ -307,6 +385,9 @@ export interface FigmaFileVersion {
   };
 }
 
+/**
+ * Represents a comment on a Figma file.
+ */
 export interface FigmaComment {
   id: string;
   file_key: string;
@@ -331,6 +412,9 @@ export interface FigmaComment {
   order_id: string;
 }
 
+/**
+ * Represents a component in Figma's component library.
+ */
 export interface FigmaComponent {
   key: string;
   name: string;
@@ -339,6 +423,9 @@ export interface FigmaComponent {
   documentationLinks?: string[];
 }
 
+/**
+ * Represents a style in Figma's style library.
+ */
 export interface FigmaStyle {
   key: string;
   name: string;

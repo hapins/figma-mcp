@@ -13,3 +13,6 @@ build/
 
 # OS
 .DS_Store
+
+# Instructions
+instructions/

@@ -1,9 +1,25 @@
 {
-  "name": "figma-mcp",
+  "name": "@hapins/figma-mcp",
   "version": "0.1.0",
-  "description": "A Model Context Protocol server",
-  "private": true,
-  "type": "module",
+  "description": "A Model Context Protocol server for Figma API integration, enabling seamless interaction with Figma files and components",
+  "keywords": [
+    "figma",
+    "mcp",
+    "api",
+    "typescript",
+    "claude",
+    "model-context-protocol"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hapins/figma-mcp.git"
+  },
+  "author": "hapins",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/hapins/figma-mcp/issues"
+  },
+  "homepage": "https://github.com/hapins/figma-mcp#readme",
   "bin": {
     "figma-mcp": "./build/index.js"
   },
@@ -14,14 +30,21 @@
     "build": "tsc && chmod +x build/index.js",
     "prepare": "npm run build",
     "watch": "tsc --watch",
-    "inspector": "npx @modelcontextprotocol/inspector build/index.js"
+    "inspector": "npx @modelcontextprotocol/inspector build/index.js",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "0.6.0",
     "axios": "^1.7.9"
   },
   "devDependencies": {
+    "@types/jest": "^29.5.14",
     "@types/node": "^20.11.24",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.2.5",
+    "ts-node": "^10.9.2",
     "typescript": "^5.3.3"
   }
 }

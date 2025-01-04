@@ -1,32 +1,57 @@
 #!/usr/bin/env node
-import { Server } from '@modelcontextprotocol/sdk/server/index.js';
-import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
+import fs from 'fs';
+import { Server } from '@modelcontextprotocol/sdk/server/index';
+import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio';
 import {
   CallToolRequestSchema,
   ErrorCode,
   ListToolsRequestSchema,
   McpError,
-} from '@modelcontextprotocol/sdk/types.js';
-import { FigmaClient } from './client/figma.js';
+} from '@modelcontextprotocol/sdk/types';
+import { FigmaClient } from './client/figma';
 
-function getFigmaAccessToken(): string {
+function loadConfig(): { figmaAccessToken: string } {
+  const configArg = process.argv.find((arg) => arg.startsWith('--config='));
+  if (configArg) {
+    const configPath = configArg.split('=')[1];
+    try {
+      console.error('[MCP Debug] Loading config from:', configPath);
+      const config = JSON.parse(fs.readFileSync(configPath, 'utf-8'));
+      const token = config.mcpServers?.figma?.env?.FIGMA_ACCESS_TOKEN;
+      if (token) {
+        console.error('[MCP Debug] Config loaded successfully');
+        return { figmaAccessToken: token };
+      }
+    } catch (error) {
+      console.error('[MCP Debug] Failed to load config:', error);
+    }
+  }
+
   console.error('[MCP Debug] Environment variables:', {
     FIGMA_ACCESS_TOKEN: process.env.FIGMA_ACCESS_TOKEN ? '***' : 'undefined',
     NODE_ENV: process.env.NODE_ENV,
     PATH: process.env.PATH,
   });
+
   const token = process.env.FIGMA_ACCESS_TOKEN;
   if (!token) {
-    console.error(
-      '[MCP Debug] FIGMA_ACCESS_TOKEN not found in environment variables'
+    console.error('[MCP Debug] FIGMA_ACCESS_TOKEN not found');
+    throw new Error(
+      'FIGMA_ACCESS_TOKEN is required. Provide it via environment variable or config file.'
     );
-    throw new Error('FIGMA_ACCESS_TOKEN environment variable is required');
   }
+
+  console.error('[MCP Debug] Using FIGMA_ACCESS_TOKEN from environment');
+  return { figmaAccessToken: token };
+}
+
+function getFigmaAccessToken(): string {
+  const { figmaAccessToken } = loadConfig();
   console.error(
-    '[MCP Debug] FIGMA_ACCESS_TOKEN found:',
-    token.substring(0, 8) + '...'
+    '[MCP Debug] Access token found:',
+    figmaAccessToken.substring(0, 8) + '...'
   );
-  return token;
+  return figmaAccessToken;
 }
 
 class FigmaServer {

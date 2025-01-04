@@ -1,0 +1,34 @@
+# Source and config files
+src/
+tsconfig.json
+.gitignore
+.github/
+.vscode/
+
+# Documentation and examples
+execute_0104.md
+example/
+*.md
+!README.md
+
+# Development files
+*.log
+*.test.js
+*.test.ts
+jest.config.js
+coverage/
+
+# Dependencies
+node_modules/
+
+# IDE files
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Source maps (will be included via files field in package.json)
+*.map
