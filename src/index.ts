@@ -15,19 +15,19 @@ function loadConfig(): { figmaAccessToken: string } {
   if (configArg) {
     const configPath = configArg.split('=')[1];
     try {
-      console.error('[MCP Debug] Loading config from:', configPath);
+      console.debug('[MCP Debug] Loading config from', configPath);
       const config = JSON.parse(fs.readFileSync(configPath, 'utf-8'));
       const token = config.mcpServers?.figma?.env?.FIGMA_ACCESS_TOKEN;
       if (token) {
-        console.error('[MCP Debug] Config loaded successfully');
+        console.debug('[MCP Debug] Config loaded successfully');
         return { figmaAccessToken: token };
       }
     } catch (error) {
-      console.error('[MCP Debug] Failed to load config:', error);
+      console.error('[MCP Error] Failed to load config', error);
     }
   }
 
-  console.error('[MCP Debug] Environment variables:', {
+  console.debug('[MCP Debug] Environment variables', {
     FIGMA_ACCESS_TOKEN: process.env.FIGMA_ACCESS_TOKEN ? '***' : 'undefined',
     NODE_ENV: process.env.NODE_ENV,
     PATH: process.env.PATH,
@@ -35,20 +35,20 @@ function loadConfig(): { figmaAccessToken: string } {
 
   const token = process.env.FIGMA_ACCESS_TOKEN;
   if (!token) {
-    console.error('[MCP Debug] FIGMA_ACCESS_TOKEN not found');
+    console.error('[MCP Error] FIGMA_ACCESS_TOKEN not found');
     throw new Error(
       'FIGMA_ACCESS_TOKEN is required. Provide it via environment variable or config file.'
     );
   }
 
-  console.error('[MCP Debug] Using FIGMA_ACCESS_TOKEN from environment');
+  console.debug('[MCP Debug] Using FIGMA_ACCESS_TOKEN from environment');
   return { figmaAccessToken: token };
 }
 
 function getFigmaAccessToken(): string {
   const { figmaAccessToken } = loadConfig();
-  console.error(
-    '[MCP Debug] Access token found:',
+  console.debug(
+    '[MCP Debug] Access token found',
     figmaAccessToken.substring(0, 8) + '...'
   );
   return figmaAccessToken;
@@ -59,7 +59,7 @@ class FigmaServer {
   private figmaClient: FigmaClient;
 
   constructor() {
-    console.error('[MCP Debug] Initializing Figma MCP server');
+    console.debug('[MCP Debug] Initializing Figma MCP server');
     this.server = new Server(
       {
         name: 'figma-mcp-server',
@@ -84,14 +84,14 @@ class FigmaServer {
     };
 
     process.on('SIGINT', async () => {
-      console.error('[MCP Debug] Shutting down server');
+      console.debug('[MCP Debug] Shutting down server');
       await this.server.close();
       process.exit(0);
     });
   }
 
   private setupToolHandlers() {
-    console.error('[MCP Debug] Setting up tool handlers');
+    console.debug('[MCP Debug] Setting up tool handlers');
     this.server.setRequestHandler(ListToolsRequestSchema, async () => ({
       tools: [
         {
@@ -216,7 +216,7 @@ class FigmaServer {
     }));
 
     this.server.setRequestHandler(CallToolRequestSchema, async (request) => {
-      console.error('[MCP Request]', {
+      console.debug('[MCP Debug] Request', {
         tool: request.params.name,
         arguments: request.params.arguments,
       });
@@ -235,7 +235,7 @@ class FigmaServer {
                 'file_key is required'
               );
             }
-            console.error('[MCP Debug] Fetching file info', {
+            console.debug('[MCP Debug] Fetching file info', {
               fileKey: args.file_key,
               depth: args.depth,
               nodeId: args.node_id,
@@ -244,13 +244,13 @@ class FigmaServer {
               depth: args.depth,
               node_id: args.node_id,
             });
-            console.error('[MCP Debug] File info fetched successfully');
+            console.debug('[MCP Debug] File info fetched successfully');
 
             try {
               const jsonString = JSON.stringify(data, null, 2);
               const sizeInMB = jsonString.length / (1024 * 1024);
-              console.error(
-                '[MCP Debug] Response size:',
+              console.debug(
+                '[MCP Debug] Response size',
                 sizeInMB.toFixed(2),
                 'MB'
               );
@@ -259,7 +259,7 @@ class FigmaServer {
                 content: [{ type: 'text', text: jsonString }],
               };
             } catch (error) {
-              console.error('[MCP Debug] JSON stringify error:', error);
+              console.error('[MCP Error] JSON stringify error', error);
               const suggestion = args.node_id
                 ? 'Try requesting a child node instead.'
                 : 'Try using a smaller depth value or specifying a node_id.';
@@ -278,11 +278,11 @@ class FigmaServer {
                 'file_key is required'
               );
             }
-            console.error('[MCP Debug] Fetching components', {
+            console.debug('[MCP Debug] Fetching components', {
               fileKey: args.file_key,
             });
             const data = await this.figmaClient.getComponents(args.file_key);
-            console.error('[MCP Debug] Components fetched successfully');
+            console.debug('[MCP Debug] Components fetched successfully');
             return {
               content: [{ type: 'text', text: JSON.stringify(data, null, 2) }],
             };
@@ -296,11 +296,11 @@ class FigmaServer {
                 'file_key is required'
               );
             }
-            console.error('[MCP Debug] Fetching styles', {
+            console.debug('[MCP Debug] Fetching styles', {
               fileKey: args.file_key,
             });
             const data = await this.figmaClient.getStyles(args.file_key);
-            console.error('[MCP Debug] Styles fetched successfully');
+            console.debug('[MCP Debug] Styles fetched successfully');
             return {
               content: [{ type: 'text', text: JSON.stringify(data, null, 2) }],
             };
@@ -311,9 +311,9 @@ class FigmaServer {
               project_id?: string;
               team_id?: string;
             };
-            console.error('[MCP Debug] Listing files', args);
+            console.debug('[MCP Debug] Listing files', args);
             const data = await this.figmaClient.listFiles(args);
-            console.error('[MCP Debug] Files listed successfully');
+            console.debug('[MCP Debug] Files listed successfully');
             return {
               content: [{ type: 'text', text: JSON.stringify(data, null, 2) }],
             };
@@ -327,11 +327,11 @@ class FigmaServer {
                 'file_key is required'
               );
             }
-            console.error('[MCP Debug] Fetching file versions', {
+            console.debug('[MCP Debug] Fetching file versions', {
               fileKey: args.file_key,
             });
             const data = await this.figmaClient.getFileVersions(args.file_key);
-            console.error('[MCP Debug] File versions fetched successfully');
+            console.debug('[MCP Debug] File versions fetched successfully');
             return {
               content: [{ type: 'text', text: JSON.stringify(data, null, 2) }],
             };
@@ -345,11 +345,11 @@ class FigmaServer {
                 'file_key is required'
               );
             }
-            console.error('[MCP Debug] Fetching file comments', {
+            console.debug('[MCP Debug] Fetching file comments', {
               fileKey: args.file_key,
             });
             const data = await this.figmaClient.getFileComments(args.file_key);
-            console.error('[MCP Debug] File comments fetched successfully');
+            console.debug('[MCP Debug] File comments fetched successfully');
             return {
               content: [{ type: 'text', text: JSON.stringify(data, null, 2) }],
             };
@@ -376,7 +376,7 @@ class FigmaServer {
                 'ids array is required and must not be empty'
               );
             }
-            console.error('[MCP Debug] Fetching file nodes', {
+            console.debug('[MCP Debug] Fetching file nodes', {
               fileKey: args.file_key,
               ids: args.ids,
             });
@@ -384,7 +384,7 @@ class FigmaServer {
               args.file_key,
               args.ids
             );
-            console.error('[MCP Debug] File nodes fetched successfully');
+            console.debug('[MCP Debug] File nodes fetched successfully');
             return {
               content: [{ type: 'text', text: JSON.stringify(data, null, 2) }],
             };
@@ -426,7 +426,7 @@ class FigmaServer {
   async run() {
     const transport = new StdioServerTransport();
     await this.server.connect(transport);
-    console.error('Figma MCP server running on stdio');
+    console.debug('Figma MCP server running on stdio');
   }
 }
 

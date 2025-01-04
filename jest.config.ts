@@ -1,22 +1,15 @@
-import type { JestConfigWithTsJest } from 'ts-jest';
+import type { Config } from '@jest/types';
 
-const config: JestConfigWithTsJest = {
+const config: Config.InitialOptions = {
   preset: 'ts-jest',
   testEnvironment: 'node',
-  moduleNameMapper: {
-    '^(\\.{1,2}/.*)\\.js$': '$1',
-  },
-  transform: {
-    '^.+\\.tsx?$': [
-      'ts-jest',
-      {
-        useESM: true,
-      },
-    ],
-  },
-  transformIgnorePatterns: ['node_modules/(?!@modelcontextprotocol/sdk)'],
-  extensionsToTreatAsEsm: ['.ts'],
-  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
+  testMatch: ['<rootDir>/src/**/__tests__/**/*.test.ts'],
+  testPathIgnorePatterns: ['/node_modules/', '/build/'],
+  clearMocks: true,
+  collectCoverage: process.env.NODE_ENV !== 'test',
+  coverageDirectory: 'coverage',
+  coveragePathIgnorePatterns: ['/node_modules/', '/build/'],
+  silent: true,
 };
 
 export default config;
