@@ -1,5 +1,6 @@
-# Source and config files
+# Source files
 src/
+!build/
 tsconfig.json
 .gitignore
 .github/
@@ -13,8 +14,9 @@ example/
 
 # Development files
 *.log
-*.test.js
-*.test.ts
+**/*.test.js
+**/*.test.ts
+**/__tests__/
 jest.config.js
 coverage/
 

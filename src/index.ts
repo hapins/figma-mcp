@@ -1,14 +1,15 @@
 #!/usr/bin/env node
 import fs from 'fs';
-import { Server } from '@modelcontextprotocol/sdk/server/index';
-import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio';
+import { Server } from '@modelcontextprotocol/sdk/server/index.js';
+import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import {
   CallToolRequestSchema,
   ErrorCode,
   ListToolsRequestSchema,
   McpError,
-} from '@modelcontextprotocol/sdk/types';
-import { FigmaClient } from './client/figma';
+  Request,
+} from '@modelcontextprotocol/sdk/types.js';
+import { FigmaClient } from './client/figma.js';
 
 function loadConfig(): { figmaAccessToken: string } {
   const configArg = process.argv.find((arg) => arg.startsWith('--config='));
@@ -26,12 +27,6 @@ function loadConfig(): { figmaAccessToken: string } {
       console.error('[MCP Error] Failed to load config', error);
     }
   }
-
-  console.debug('[MCP Debug] Environment variables', {
-    FIGMA_ACCESS_TOKEN: process.env.FIGMA_ACCESS_TOKEN ? '***' : 'undefined',
-    NODE_ENV: process.env.NODE_ENV,
-    PATH: process.env.PATH,
-  });
 
   const token = process.env.FIGMA_ACCESS_TOKEN;
   if (!token) {
@@ -75,7 +70,7 @@ class FigmaServer {
     this.figmaClient = new FigmaClient(getFigmaAccessToken());
     this.setupToolHandlers();
 
-    this.server.onerror = (error) => {
+    this.server.onerror = (error: Error) => {
       console.error('[MCP Error]', {
         name: error.name,
         message: error.message,
