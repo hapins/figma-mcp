@@ -1,6 +1,6 @@
 {
   "name": "@hapins/figma-mcp",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "A Model Context Protocol server for Figma API integration, enabling seamless interaction with Figma files and components",
   "keywords": [
     "figma",

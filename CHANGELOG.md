@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.1.2] - 2024-03-14
+
+### Changed
+
+- Update examples to use npx with -y option
+
 ## [0.1.1] - 2024-03-14
 
 ### Fixed

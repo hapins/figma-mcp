@@ -2,6 +2,8 @@
 
 A Model Context Protocol server for Figma API integration. This package provides a set of tools to interact with the Figma API through the Model Context Protocol.
 
+> **Note**: This package was implemented by [Cline](https://github.com/cursor-ai/cline), an open-source CLI tool for Claude AI. All code in this repository was written by Claude through Cline.
+
 ## Installation
 
 ```bash
