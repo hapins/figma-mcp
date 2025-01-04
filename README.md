@@ -33,7 +33,7 @@ Example config.json:
   "mcpServers": {
     "figma": {
       "command": "npx",
-      "args": ["@hapins/figma-mcp"],
+      "args": ["-y", "@hapins/figma-mcp"],
       "env": {
         "FIGMA_ACCESS_TOKEN": "your-figma-access-token"
       }
